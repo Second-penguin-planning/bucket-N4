@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -11,16 +13,22 @@
 
 </head>
 
+
 <body>
+
+<h1>JLPT Kanji Trainer</h1>
+<p>N5 + N4 | English / Tagalog</p>
+
 <input id="username" placeholder="Your name">
 <button onclick="startUser()">Start</button>
-<h1>JLPT Kanji Trainer</h1>
-  <div id="progressBox">
+
+
+<div id="progressBox">
 <div id="progressBar"></div>
 </div>
 
 <p id="progressText"></p>
-<p>N5 + N4 | English / Tagalog</p>
+
 
 <div id="card">
 
@@ -30,9 +38,10 @@
 <p id="meaning" class="hidden"></p>
 
 <button onclick="showAnswer()">Show Answer</button>
+
 </div>
-<input id="username" placeholder="Your name">
-<button onclick="startUser()">Start</button>
+
+
 <div class="buttons">
 
 <button onclick="answer(1)">Easy</button>
@@ -41,6 +50,7 @@
 <button onclick="answer(4)">Don't Know</button>
 
 </div>
+
 
 <div id="stats">
 
@@ -58,6 +68,8 @@
 
 </div>
 
+
 <script src="app.js"></script>
+
 </body>
 </html>
