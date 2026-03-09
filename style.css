@@ -24,3 +24,23 @@ font-size:16px;
 .hidden{
 visibility:hidden;
 }
+#progressBox{
+width:80%;
+height:20px;
+background:#ddd;
+margin:20px auto;
+border-radius:10px;
+}
+
+#progressBar{
+height:20px;
+width:0%;
+background:#4caf50;
+border-radius:10px;
+transition:0.3s;
+}
+
+#stats{
+margin-top:30px;
+font-size:18px;
+}
