@@ -101,16 +101,7 @@ updateScore()
 
 }
 
-.hidden{
-display:none;
-}
 
-#helpBox{
-background:#f4f4f4;
-padding:15px;
-margin-top:20px;
-border-radius:10px;
-}
 // --------------------
 // ボタン有効化
 // --------------------
