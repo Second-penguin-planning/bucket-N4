@@ -1,3 +1,5 @@
+// 正しい形式
+[
 {"kanji":"一","reading":"いち / いつ / ひと","meaning":"one / isa"},
 {"kanji":"二","reading":"に / ふた","meaning":"two / dalawa"},
 {"kanji":"三","reading":"さん / み","meaning":"three / tatlo"},
@@ -329,3 +331,4 @@
 {"kanji":"飯","reading":"はん / めし","meaning":"meal / cooked rice / pagkain / kanin"},
 {"kanji":"館","reading":"かん / たて","meaning":"building / hall / gusali"},
 {"kanji":"首","reading":"しゅ / くび","meaning":"neck / head / leeg / ulo"}
+]
