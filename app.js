@@ -9,7 +9,7 @@ loadCard()
 })
 
 function loadCard(){
-
+if(kanjiList.length===0) return
 let k=kanjiList[current]
 
 document.getElementById("kanji").innerText=k.kanji
