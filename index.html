@@ -1,37 +1,41 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JLPT N3 Kanji Trainer</title>
+
+<title>JLPT Kanji Bucket Trainer</title>
+
 <link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+
 </head>
 
 <body>
 
-<h1>JLPT N3 Kanji Trainer</h1>
+<h1>JLPT Kanji Trainer</h1>
+<p>N5 + N4 | English / Tagalog</p>
 
-<div class="card">
+<div id="card">
 
-<div id="kanji">漢</div>
-
-<div id="reading"></div>
-<div id="meaning"></div>
-
-<button onclick="showAnswer()">Show</button>
+<h2 id="kanji">漢</h2>
+<p id="reading">reading</p>
+<p id="meaning">meaning</p>
 
 </div>
 
 <div class="buttons">
 
-<button onclick="correct()">Easy</button>
-<button onclick="wrong()">Hard</button>
+<button onclick="answer(1)">Easy</button>
+<button onclick="answer(2)">OK</button>
+<button onclick="answer(3)">Hard</button>
+<button onclick="answer(4)">Don't Know</button>
 
 </div>
 
-<div id="bucketInfo"></div>
+<div id="stats"></div>
 
-<script src="script.js"></script>
+<script src="app.js"></script>
 
 </body>
 </html>
