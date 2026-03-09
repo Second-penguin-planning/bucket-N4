@@ -1,7 +1,7 @@
 let kanjiList=[]
 let current=0
 
-fetch("kanji.json")
+fetch("bucket-N4.json")
 .then(res=>res.json())
 .then(data=>{
 kanjiList=data
