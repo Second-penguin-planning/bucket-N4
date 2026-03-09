@@ -1,73 +1,53 @@
-let reviewList = []
-let kanjiList = []
-let current = 0
-
-let username = ""
-let today = ""
+let reviewList = [];
+let kanjiList = [];
+let current = 0;
+let username = "";
 
 
-// --------------------
-// 漢字データ読み込み
-// --------------------
+// 1. データ読み込み（読み込むだけで表示はしない）
 fetch("bucket-N4.json")
-.then(res => res.json())
-.then(data => {
-
-    kanjiList = data
-    loadCard()
-    updateProgress()
-
-})
+    .then(res => res.json())
+    .then(data => {
+        kanjiList = data;
+        console.log("Data loaded");
+    })
+    .catch(err => console.error("JSON load error:", err));
 
 
 // --------------------
 // 今日の日付
 // --------------------
-function getToday(){
-
-    return new Date().toISOString().slice(0,10)
-
+function getToday() {
+    return new Date().toISOString().slice(0, 10);
 }
 
 
 // --------------------
 // LocalStorageキー
 // --------------------
-function getStorageKey(){
-    return "progress_" + username; // ユーザーごとに1つの保存データを持つ
+function getStorageKey() {
+    return "progress_" + username;
 }
 
 
 // --------------------
 // 復習カード作成
 // --------------------
-function buildReviewList(){
+function buildReviewList() {
+    let key = getStorageKey();
+    let data = JSON.parse(localStorage.getItem(key)) || {};
+    let todayDate = getToday();
 
-let key = getStorageKey()
+    reviewList = [];
 
-let data = JSON.parse(localStorage.getItem(key)) || {}
-
-let todayDate = getToday()
-
-reviewList = []
-
-for(let i=0;i<kanjiList.length;i++){
-
-let k = kanjiList[i]
-
-if(!data[k.kanji]){
-
-reviewList.push(k)
-continue
-
-}
-
-if(data[k.kanji].next <= todayDate){
-
-reviewList.push(k)
-
-}
-
+    for (let i = 0; i < kanjiList.length; i++) {
+        let k = kanjiList[i];
+        // 未学習、または復習予定日が今日以前のものをリストに入れる
+        if (!data[k.kanji] || data[k.kanji].next <= todayDate) {
+            reviewList.push(k);
+        }
+    }
+    current = 0;
 }
 
 current = 0
@@ -78,25 +58,20 @@ current = 0
 // --------------------
 // Start
 // --------------------
-function startUser(){
+function startUser() {
+    username = document.getElementById("username").value;
+    if (username === "") {
+        alert("Please enter your name");
+        return;
+    }
 
-username = document.getElementById("username").value
-
-if(username===""){
-alert("Please enter your name")
-return
-}
-
-today = getToday()
-
-enableButtons()
-
-buildReviewList()
-loadCard()
-updateProgress()
-updateBuckets()
-updateScore()
-
+    // スタート時にリストを構築して表示
+    buildReviewList();
+    enableButtons();
+    loadCard();
+    updateProgress();
+    updateBuckets();
+    updateScore();
 }
 
 
@@ -119,27 +94,25 @@ btn.disabled = false
 // --------------------
 function loadCard(){
 
-if(reviewList.length === 0){
+const kanjiEl = document.getElementById("kanji");
+    const readingEl = document.getElementById("reading");
+    const meaningEl = document.getElementById("meaning");
 
-document.getElementById("kanji").innerText="All done today 🎉"
-document.getElementById("reading").innerText=""
-document.getElementById("meaning").innerText=""
+    if (reviewList.length === 0 || current >= reviewList.length) {
+        kanjiEl.innerText = "All done today 🎉";
+        readingEl.innerText = "";
+        meaningEl.innerText = "";
+        return;
+    }
 
-return
+    let k = reviewList[current];
+    kanjiEl.innerText = k.kanji;
+    readingEl.innerText = "Reading: " + k.reading;
+    meaningEl.innerText = "Meaning: " + k.meaning;
 
+    readingEl.classList.add("hidden");
+    meaningEl.classList.add("hidden");
 }
-
-let k = reviewList[current]
-
-document.getElementById("kanji").innerText = k.kanji
-document.getElementById("reading").innerText = "Reading: " + k.reading
-document.getElementById("meaning").innerText = "Meaning: " + k.meaning
-
-document.getElementById("reading").classList.add("hidden")
-document.getElementById("meaning").classList.add("hidden")
-
-}
-
 
 // --------------------
 // 答え表示
@@ -155,58 +128,46 @@ document.getElementById("meaning").classList.remove("hidden")
 // --------------------
 // 復習日数
 // --------------------
-function getReviewDays(bucket){
-
-if(bucket == 4) return 0
-if(bucket == 3) return 1
-if(bucket == 2) return 3
-if(bucket == 1) return 7
-
+function getReviewDays(bucket) {
+    if (bucket == 1) return 7; // Easy
+    if (bucket == 2) return 3; // OK
+    if (bucket == 3) return 1; // Hard
+    if (bucket == 4) return 0; // Don't Know
 }
 
 
 // --------------------
 // 回答処理
 // --------------------
-function answer(bucket){
+function answer(bucket) {
+    if (reviewList.length === 0 || current >= reviewList.length) return;
 
-if(reviewList.length === 0) return
+    let k = reviewList[current];
+    let key = getStorageKey();
+    let data = JSON.parse(localStorage.getItem(key)) || {};
 
-let k = reviewList[current]
+    let days = getReviewDays(bucket);
+    let nextDate = new Date();
+    nextDate.setDate(nextDate.getDate() + days);
 
-let key = getStorageKey()
+    data[k.kanji] = {
+        bucket: bucket,
+        next: nextDate.toISOString().slice(0, 10)
+    };
 
-let data = JSON.parse(localStorage.getItem(key)) || {}
+    localStorage.setItem(key, JSON.stringify(data));
 
-let days = getReviewDays(bucket)
+    current++;
 
-let next = new Date()
-next.setDate(next.getDate() + days)
+if (current >= reviewList.length) {
+        alert("Finished today's study!");
+        // 終わった直後にリストを再更新（必要に応じて）
+    }
 
-data[k.kanji] = {
-
-bucket: bucket,
-next: next.toISOString().slice(0,10)
-
-}
-
-localStorage.setItem(key, JSON.stringify(data))
-
-current++
-
-if(current >= reviewList.length){
-
-alert("Finished today's study!")
-
-buildReviewList()
-
-}
-
-loadCard()
-updateProgress()
-updateBuckets()
-updateScore()
-
+    loadCard();
+    updateProgress();
+    updateBuckets();
+    updateScore();
 }
 
 
