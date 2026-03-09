@@ -28,7 +28,38 @@ function getToday(){
 
 }
 
+function buildReviewList(){
 
+let key = getStorageKey()
+
+let data = JSON.parse(localStorage.getItem(key)) || {}
+
+let todayDate = getToday()
+
+reviewList = []
+
+for(let i=0;i<kanjiList.length;i++){
+
+let k = kanjiList[i]
+
+if(!data[k.kanji]){
+
+reviewList.push(k)
+continue
+
+}
+
+if(data[k.kanji].next <= todayDate){
+
+reviewList.push(k)
+
+}
+
+}
+
+current = 0
+
+}
 // --------------------
 // LocalStorageキー
 // --------------------
@@ -44,18 +75,22 @@ function getStorageKey(){
 // --------------------
 function startUser(){
 
-    username = document.getElementById("username").value
+username = document.getElementById("username").value
 
-    if(username === ""){
-        alert("Please enter your name")
-        return
-    }
+if(username===""){
+alert("Please enter your name")
+return
+}
 
-    today = getToday()
+today = getToday()
 
-    loadProgress()
+enableButtons()
 
-    enableButtons()
+buildReviewList()
+loadCard()
+updateProgress()
+updateBuckets()
+updateScore()
 
 }
 
@@ -94,19 +129,23 @@ function loadProgress(){
 // --------------------
 function loadCard(){
 
-    if(kanjiList.length === 0) return
+if(reviewList.length === 0){
 
-    let k = kanjiList[current]
-
-    document.getElementById("kanji").innerText = k.kanji
-    document.getElementById("reading").innerText = "Reading: " + k.reading
-    document.getElementById("meaning").innerText = "Meaning: " + k.meaning
-
-    document.getElementById("reading").classList.add("hidden")
-    document.getElementById("meaning").classList.add("hidden")
+document.getElementById("kanji").innerText="All done today 🎉"
+return
 
 }
 
+let k = reviewList[current]
+
+document.getElementById("kanji").innerText = k.kanji
+document.getElementById("reading").innerText = "Reading: " + k.reading
+document.getElementById("meaning").innerText = "Meaning: " + k.meaning
+
+document.getElementById("reading").classList.add("hidden")
+document.getElementById("meaning").classList.add("hidden")
+
+}
 
 // --------------------
 // 答え表示
@@ -159,7 +198,7 @@ function answer(bucket){
 
     current++
 
-    if(current >= kanjiList.length){
+   if(current >= reviewList.length)
 
         alert("Finished today's study!")
         current = 0
