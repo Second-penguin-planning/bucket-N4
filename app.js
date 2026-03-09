@@ -10,6 +10,9 @@ updateProgress()
 updateBuckets()
 })
 
+function getToday(){
+return new Date().toISOString().slice(0,10)
+}
 function loadCard(){
 
 if(kanjiList.length===0) return
