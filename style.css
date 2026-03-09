@@ -4,9 +4,11 @@ text-align:center;
 padding:30px;
 background:#f5f5f5;
 }
+
 .card{
 touch-action:none;
 }
+
 #card{
 background:white;
 padding:30px;
@@ -23,9 +25,26 @@ padding:12px 20px;
 margin:5px;
 font-size:16px;
 }
+
 .hidden{
 visibility:hidden;
 }
+
+/* help box */
+
+#helpBox{
+background:#f4f4f4;
+padding:15px;
+margin-top:20px;
+border-radius:10px;
+}
+
+#helpBox.hidden{
+display:none;
+}
+
+/* progress bar */
+
 #progressBox{
 width:80%;
 height:20px;
@@ -42,12 +61,11 @@ border-radius:10px;
 transition:0.3s;
 }
 
-#stats{
-margin-top:30px;
-font-size:18px;
-}
+/* bucket stats */
+
 #stats{
 margin-top:40px;
+font-size:18px;
 }
 
 #stats div{
