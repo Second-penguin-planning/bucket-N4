@@ -23,6 +23,7 @@ document.getElementById("meaning").classList.add("hidden")
 
 }
 updateProgress()
+updateBuckets()
 function showAnswer(){
 
 document.getElementById("reading").classList.remove("hidden")
@@ -50,7 +51,30 @@ current=0
 loadCard()
 
 updateProgress()
-updateBuckets()
+function updateBuckets(){
+
+let data = JSON.parse(localStorage.getItem("progress")) || {}
+
+let b1=[]
+let b2=[]
+let b3=[]
+let b4=[]
+
+for(let k in data){
+
+if(data[k]==1) b1.push(k)
+if(data[k]==2) b2.push(k)
+if(data[k]==3) b3.push(k)
+if(data[k]==4) b4.push(k)
+
+}
+
+document.getElementById("bucket1").innerText=b1.join(" ")
+document.getElementById("bucket2").innerText=b2.join(" ")
+document.getElementById("bucket3").innerText=b3.join(" ")
+document.getElementById("bucket4").innerText=b4.join(" ")
+
+}
 
 }
 function updateProgress(){
