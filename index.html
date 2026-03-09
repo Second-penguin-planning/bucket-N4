@@ -18,12 +18,10 @@
 <h1>JLPT Kanji Trainer</h1>
 <p>N5 + N4 | English / Tagalog</p>
 
-<input id="username" placeholder="Your name">
+<input id="username" placeholder="Your name" onkeypress="if(event.key==='Enter') startUser()">
 <button onclick="startUser()">Start</button>
 
-<div id="progressBox">
-<div id="progressBar" role="progressbar"></div>
-</div>
+<div id="progressBar" role="progressbar" style="width:0%"></div>
 
 <p id="progressText"></p>
 <p id="score"></p>
@@ -38,7 +36,15 @@
 <button onclick="showAnswer()" id="showBtn" disabled>Show Answer</button>
 
 </div>
+<div id="teacherPanel">
 
+<h3>Teacher Dashboard</h3>
+
+<button onclick="showTeacher()">Teacher Mode</button>
+
+<div id="teacher"></div>
+
+</div>
 <div class="buttons">
 
 <button onclick="answer(1)" class="answerBtn" disabled>Easy</button>
@@ -50,17 +56,17 @@
 
 <div id="stats">
 
-<h3>Bucket 1 (Easy)</h3>
-<div id="bucket1"></div>
-
-<h3>Bucket 2 (OK)</h3>
-<div id="bucket2"></div>
+<h3>Bucket 4 (Don't Know)</h3>
+<div id="bucket4"></div>
 
 <h3>Bucket 3 (Hard)</h3>
 <div id="bucket3"></div>
 
-<h3>Bucket 4 (Don't Know)</h3>
-<div id="bucket4"></div>
+<h3>Bucket 2 (OK)</h3>
+<div id="bucket2"></div>
+
+<h3>Bucket 1 (Easy)</h3>
+<div id="bucket1"></div>
 
 </div>
 
