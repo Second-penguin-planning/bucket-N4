@@ -1,3 +1,4 @@
+let reviewList = []
 let kanjiList = []
 let current = 0
 
