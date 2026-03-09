@@ -9,22 +9,24 @@ loadCard()
 })
 
 function loadCard(){
+
 if(kanjiList.length===0) return
+
 let k=kanjiList[current]
 
 document.getElementById("kanji").innerText=k.kanji
 document.getElementById("reading").innerText="Reading: "+k.reading
 document.getElementById("meaning").innerText="Meaning: "+k.meaning
 
-document.getElementById("reading").style.display="none"
-document.getElementById("meaning").style.display="none"
+document.getElementById("reading").classList.add("hidden")
+document.getElementById("meaning").classList.add("hidden")
 
 }
 
 function showAnswer(){
 
-document.getElementById("reading").style.display="block"
-document.getElementById("meaning").style.display="block"
+document.getElementById("reading").classList.remove("hidden")
+document.getElementById("meaning").classList.remove("hidden")
 
 }
 
