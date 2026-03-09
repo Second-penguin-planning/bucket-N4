@@ -5,6 +5,7 @@ let current = 0
 let username = ""
 let today = ""
 
+
 // --------------------
 // 漢字データ読み込み
 // --------------------
@@ -28,6 +29,20 @@ function getToday(){
 
 }
 
+
+// --------------------
+// LocalStorageキー
+// --------------------
+function getStorageKey(){
+
+    return "progress_" + username + "_" + today
+
+}
+
+
+// --------------------
+// 復習カード作成
+// --------------------
 function buildReviewList(){
 
 let key = getStorageKey()
@@ -58,14 +73,6 @@ reviewList.push(k)
 }
 
 current = 0
-
-}
-// --------------------
-// LocalStorageキー
-// --------------------
-function getStorageKey(){
-
-    return "progress_" + username + "_" + today
 
 }
 
@@ -100,26 +107,11 @@ updateScore()
 // --------------------
 function enableButtons(){
 
-    document.getElementById("showBtn").disabled = false
+document.getElementById("showBtn").disabled = false
 
-    document.querySelectorAll(".answerBtn").forEach(btn=>{
-        btn.disabled = false
-    })
-
-}
-
-
-// --------------------
-// 保存データ読み込み
-// --------------------
-function loadProgress(){
-
-    let key = getStorageKey()
-
-    let data = JSON.parse(localStorage.getItem(key)) || {}
-
-    updateBuckets(data)
-    updateScore()
+document.querySelectorAll(".answerBtn").forEach(btn=>{
+btn.disabled = false
+})
 
 }
 
@@ -132,6 +124,9 @@ function loadCard(){
 if(reviewList.length === 0){
 
 document.getElementById("kanji").innerText="All done today 🎉"
+document.getElementById("reading").innerText=""
+document.getElementById("meaning").innerText=""
+
 return
 
 }
@@ -147,13 +142,14 @@ document.getElementById("meaning").classList.add("hidden")
 
 }
 
+
 // --------------------
 // 答え表示
 // --------------------
 function showAnswer(){
 
-    document.getElementById("reading").classList.remove("hidden")
-    document.getElementById("meaning").classList.remove("hidden")
+document.getElementById("reading").classList.remove("hidden")
+document.getElementById("meaning").classList.remove("hidden")
 
 }
 
@@ -163,10 +159,10 @@ function showAnswer(){
 // --------------------
 function getReviewDays(bucket){
 
-    if(bucket == 4) return 0
-    if(bucket == 3) return 1
-    if(bucket == 2) return 3
-    if(bucket == 1) return 7
+if(bucket == 4) return 0
+if(bucket == 3) return 1
+if(bucket == 2) return 3
+if(bucket == 1) return 7
 
 }
 
@@ -176,39 +172,42 @@ function getReviewDays(bucket){
 // --------------------
 function answer(bucket){
 
-    let k = kanjiList[current]
+if(reviewList.length === 0) return
 
-    let key = getStorageKey()
+let k = reviewList[current]
 
-    let data = JSON.parse(localStorage.getItem(key)) || {}
+let key = getStorageKey()
 
-    let days = getReviewDays(bucket)
+let data = JSON.parse(localStorage.getItem(key)) || {}
 
-    let next = new Date()
-    next.setDate(next.getDate() + days)
+let days = getReviewDays(bucket)
 
-    data[k.kanji] = {
+let next = new Date()
+next.setDate(next.getDate() + days)
 
-        bucket: bucket,
-        next: next.toISOString().slice(0,10)
+data[k.kanji] = {
 
-    }
+bucket: bucket,
+next: next.toISOString().slice(0,10)
 
-    localStorage.setItem(key, JSON.stringify(data))
+}
 
-    current++
+localStorage.setItem(key, JSON.stringify(data))
 
-   if(current >= reviewList.length)
+current++
 
-        alert("Finished today's study!")
-        current = 0
+if(current >= reviewList.length){
 
-    }
+alert("Finished today's study!")
 
-    loadCard()
-    updateProgress()
-    updateBuckets()
-    updateScore()
+buildReviewList()
+
+}
+
+loadCard()
+updateProgress()
+updateBuckets()
+updateScore()
 
 }
 
@@ -218,14 +217,21 @@ function answer(bucket){
 // --------------------
 function updateProgress(){
 
-    if(kanjiList.length === 0) return
+if(reviewList.length === 0){
 
-    let percent = (current / kanjiList.length) * 100
+document.getElementById("progressBar").style.width = "0%"
+document.getElementById("progressText").innerText = "0 / 0"
 
-    document.getElementById("progressBar").style.width = percent + "%"
+return
 
-    document.getElementById("progressText").innerText =
-    current + " / " + kanjiList.length
+}
+
+let percent = (current / reviewList.length) * 100
+
+document.getElementById("progressBar").style.width = percent + "%"
+
+document.getElementById("progressText").innerText =
+current + " / " + reviewList.length
 
 }
 
@@ -235,30 +241,30 @@ function updateProgress(){
 // --------------------
 function updateBuckets(){
 
-    let key = getStorageKey()
+let key = getStorageKey()
 
-    let data = JSON.parse(localStorage.getItem(key)) || {}
+let data = JSON.parse(localStorage.getItem(key)) || {}
 
-    let b1 = []
-    let b2 = []
-    let b3 = []
-    let b4 = []
+let b1 = []
+let b2 = []
+let b3 = []
+let b4 = []
 
-    for(let k in data){
+for(let k in data){
 
-        let bucket = data[k].bucket
+let bucket = data[k].bucket
 
-        if(bucket == 1) b1.push(k)
-        if(bucket == 2) b2.push(k)
-        if(bucket == 3) b3.push(k)
-        if(bucket == 4) b4.push(k)
+if(bucket == 1) b1.push(k)
+if(bucket == 2) b2.push(k)
+if(bucket == 3) b3.push(k)
+if(bucket == 4) b4.push(k)
 
-    }
+}
 
-    document.getElementById("bucket1").innerText = b1.join(" ")
-    document.getElementById("bucket2").innerText = b2.join(" ")
-    document.getElementById("bucket3").innerText = b3.join(" ")
-    document.getElementById("bucket4").innerText = b4.join(" ")
+document.getElementById("bucket1").innerText = b1.join(" ")
+document.getElementById("bucket2").innerText = b2.join(" ")
+document.getElementById("bucket3").innerText = b3.join(" ")
+document.getElementById("bucket4").innerText = b4.join(" ")
 
 }
 
@@ -268,31 +274,36 @@ function updateBuckets(){
 // --------------------
 function updateScore(){
 
-    let key = getStorageKey()
+let key = getStorageKey()
 
-    let data = JSON.parse(localStorage.getItem(key)) || {}
+let data = JSON.parse(localStorage.getItem(key)) || {}
 
-    let total = 0
-    let correct = 0
+let total = 0
+let correct = 0
 
-    for(let k in data){
+for(let k in data){
 
-        total++
+total++
 
-        if(data[k].bucket == 1 || data[k].bucket == 2){
+if(data[k].bucket == 1 || data[k].bucket == 2){
 
-            correct++
+correct++
 
-        }
+}
 
-    }
+}
 
-    if(total == 0) return
+if(total == 0){
 
-    let percent = Math.round((correct / total) * 100)
+document.getElementById("score").innerText=""
+return
 
-    document.getElementById("score").innerText =
-    "Score: " + percent + "%"
+}
+
+let percent = Math.round((correct / total) * 100)
+
+document.getElementById("score").innerText =
+"Score: " + percent + "%"
 
 }
 
@@ -302,27 +313,34 @@ function updateScore(){
 // --------------------
 function showTeacher(){
 
-    let out = ""
+let out = ""
 
-    for(let i = 0; i < localStorage.length; i++){
+for(let i = 0; i < localStorage.length; i++){
 
-        let key = localStorage.key(i)
+let key = localStorage.key(i)
 
-        if(key.startsWith("progress_")){
+if(key.startsWith("progress_")){
 
-            let data = JSON.parse(localStorage.getItem(key))
+let data = JSON.parse(localStorage.getItem(key))
 
-            let total = Object.keys(data).length
+let total = Object.keys(data).length
 
-            out += "<p>" + key + " : " + total + " kanji</p>"
-
-        }
-
-    }
-
-    document.getElementById("teacher").innerHTML = out
+out += "<p>" + key + " : " + total + " kanji</p>"
 
 }
+
+}
+
+document.getElementById("teacher").innerHTML = out
+
+}
+
+
+// --------------------
+// Swipe UI
+// --------------------
+window.onload = function(){
+
 let startX=0
 let startY=0
 
@@ -356,3 +374,5 @@ if(dy>50) answer(4)
 }
 
 })
+
+}
