@@ -22,7 +22,7 @@ document.getElementById("reading").classList.add("hidden")
 document.getElementById("meaning").classList.add("hidden")
 
 }
-
+updateProgress()
 function showAnswer(){
 
 document.getElementById("reading").classList.remove("hidden")
