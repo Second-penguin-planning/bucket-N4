@@ -34,9 +34,7 @@ function getToday(){
 // LocalStorageキー
 // --------------------
 function getStorageKey(){
-
-    return "progress_" + username + "_" + today
-
+    return "progress_" + username; // ユーザーごとに1つの保存データを持つ
 }
 
 
