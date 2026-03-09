@@ -50,7 +50,6 @@ function buildReviewList() {
     current = 0;
 }
 
-
 // --------------------
 // Start
 // --------------------
