@@ -323,3 +323,36 @@ function showTeacher(){
     document.getElementById("teacher").innerHTML = out
 
 }
+let startX=0
+let startY=0
+
+let card=document.getElementById("card")
+
+card.addEventListener("touchstart",e=>{
+
+startX=e.touches[0].clientX
+startY=e.touches[0].clientY
+
+})
+
+card.addEventListener("touchend",e=>{
+
+let endX=e.changedTouches[0].clientX
+let endY=e.changedTouches[0].clientY
+
+let dx=endX-startX
+let dy=endY-startY
+
+if(Math.abs(dx)>Math.abs(dy)){
+
+if(dx>50) answer(1)
+if(dx<-50) answer(3)
+
+}else{
+
+if(dy<-50) answer(2)
+if(dy>50) answer(4)
+
+}
+
+})
