@@ -7,7 +7,6 @@ fetch("kanji.json")
 kanjiList=data
 loadCard()
 })
-
 function loadCard(){
 
 let k=kanjiList[current]
