@@ -45,7 +45,14 @@ function startUser(){
 
     loadProgress()
 }
+function getReviewDays(bucket){
 
+if(bucket==4) return 0
+if(bucket==3) return 1
+if(bucket==2) return 3
+if(bucket==1) return 7
+
+}
 // ----------------------
 // 保存データ読み込み
 // ----------------------
@@ -92,29 +99,59 @@ function showAnswer(){
 // ----------------------
 function answer(bucket){
 
-    let k = kanjiList[current]
+let k = kanjiList[current]
 
-    let key = getStorageKey()
+let key = getStorageKey()
 
-    let data = JSON.parse(localStorage.getItem(key)) || {}
+let data = JSON.parse(localStorage.getItem(key)) || {}
 
-    data[k.kanji] = bucket
+let days = getReviewDays(bucket)
 
-    localStorage.setItem(key, JSON.stringify(data))
+let next = new Date()
+next.setDate(next.getDate() + days)
 
-    current++
+data[k.kanji] = {
+bucket: bucket,
+next: next.toISOString().slice(0,10)
+}
 
-    if(current >= kanjiList.length){
-        alert("Finished today's study!")
-        current = 0
-    }
+localStorage.setItem(key, JSON.stringify(data))
 
-    loadCard()
-    updateProgress()
-    updateBuckets()
+current++
+
+loadCard()
+updateProgress()
+updateBuckets()
+updateScore()
+
+}
+function updateScore(){
+
+let key = getStorageKey()
+
+let data = JSON.parse(localStorage.getItem(key)) || {}
+
+let total = 0
+let correct = 0
+
+for(let k in data){
+
+total++
+
+if(data[k].bucket == 1 || data[k].bucket == 2){
+correct++
+}
 
 }
 
+if(total==0) return
+
+let percent = Math.round((correct/total)*100)
+
+document.getElementById("score").innerText =
+"Score: " + percent + "%"
+
+}
 // ----------------------
 // 進捗バー
 // ----------------------
