@@ -385,3 +385,14 @@ if(dy>50) answer(4)
 })
 
 }
+function toggleHelp(){
+
+let box = document.getElementById("helpBox")
+
+if(box.classList.contains("hidden")){
+box.classList.remove("hidden")
+}else{
+box.classList.add("hidden")
+}
+
+}
