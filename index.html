@@ -13,7 +13,6 @@
 
 </head>
 
-
 <body>
 
 <h1>JLPT Kanji Trainer</h1>
@@ -22,9 +21,8 @@
 <input id="username" placeholder="Your name">
 <button onclick="startUser()">Start</button>
 
-
 <div id="progressBox">
-<div id="progressBar"></div>
+<div id="progressBar" role="progressbar"></div>
 </div>
 
 <p id="progressText"></p>
@@ -37,20 +35,18 @@
 <p id="reading" class="hidden"></p>
 <p id="meaning" class="hidden"></p>
 
-<button onclick="showAnswer()">Show Answer</button>
+<button onclick="showAnswer()" id="showBtn" disabled>Show Answer</button>
 
 </div>
-
 
 <div class="buttons">
 
-<button onclick="answer(1)">Easy</button>
-<button onclick="answer(2)">OK</button>
-<button onclick="answer(3)">Hard</button>
-<button onclick="answer(4)">Don't Know</button>
+<button onclick="answer(1)" class="answerBtn" disabled>Easy</button>
+<button onclick="answer(2)" class="answerBtn" disabled>OK</button>
+<button onclick="answer(3)" class="answerBtn" disabled>Hard</button>
+<button onclick="answer(4)" class="answerBtn" disabled>Don't Know</button>
 
 </div>
-
 
 <div id="stats">
 
@@ -68,9 +64,11 @@
 
 </div>
 
+<div id="teacherPanel">
 <button onclick="showTeacher()">Teacher Mode</button>
-
 <div id="teacher"></div>
+</div>
+
 <script src="app.js"></script>
 
 </body>
