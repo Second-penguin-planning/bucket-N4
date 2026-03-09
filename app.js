@@ -6,6 +6,8 @@ fetch("bucket-N4.json")
 .then(data=>{
 kanjiList=data
 loadCard()
+updateProgress()
+updateBuckets()
 })
 
 function loadCard(){
@@ -22,8 +24,7 @@ document.getElementById("reading").classList.add("hidden")
 document.getElementById("meaning").classList.add("hidden")
 
 }
-updateProgress()
-updateBuckets()
+
 function showAnswer(){
 
 document.getElementById("reading").classList.remove("hidden")
@@ -49,8 +50,22 @@ current=0
 }
 
 loadCard()
-
 updateProgress()
+updateBuckets()
+
+}
+
+function updateProgress(){
+
+let percent = (current / kanjiList.length) * 100
+
+document.getElementById("progressBar").style.width = percent + "%"
+
+document.getElementById("progressText").innerText =
+current + " / " + kanjiList.length
+
+}
+
 function updateBuckets(){
 
 let data = JSON.parse(localStorage.getItem("progress")) || {}
@@ -73,39 +88,5 @@ document.getElementById("bucket1").innerText=b1.join(" ")
 document.getElementById("bucket2").innerText=b2.join(" ")
 document.getElementById("bucket3").innerText=b3.join(" ")
 document.getElementById("bucket4").innerText=b4.join(" ")
-
-}
-
-}
-function updateProgress(){
-
-let percent = (current / kanjiList.length) * 100
-
-document.getElementById("progressBar").style.width = percent + "%"
-
-document.getElementById("progressText").innerText =
-current + " / " + kanjiList.length
-
-}
-
-function updateBuckets(){
-
-let data = JSON.parse(localStorage.getItem("progress")) || {}
-
-let b1=0,b2=0,b3=0,b4=0
-
-for(let k in data){
-
-if(data[k]==1) b1++
-if(data[k]==2) b2++
-if(data[k]==3) b3++
-if(data[k]==4) b4++
-
-}
-
-document.getElementById("b1").innerText=b1
-document.getElementById("b2").innerText=b2
-document.getElementById("b3").innerText=b3
-document.getElementById("b4").innerText=b4
 
 }
