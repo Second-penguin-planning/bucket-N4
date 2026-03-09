@@ -5,6 +5,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4CAF50">
 
 <title>JLPT Kanji Bucket Trainer</title>
 
@@ -21,7 +22,9 @@
 <input id="username" placeholder="Your name" onkeypress="if(event.key==='Enter') startUser()">
 <button onclick="startUser()">Start</button>
 
+<div id="progressBox">
 <div id="progressBar" role="progressbar" style="width:0%"></div>
+</div>
 
 <p id="progressText"></p>
 <p id="score"></p>
@@ -36,15 +39,7 @@
 <button onclick="showAnswer()" id="showBtn" disabled>Show Answer</button>
 
 </div>
-<div id="teacherPanel">
 
-<h3>Teacher Dashboard</h3>
-
-<button onclick="showTeacher()">Teacher Mode</button>
-
-<div id="teacher"></div>
-
-</div>
 <div class="buttons">
 
 <button onclick="answer(1)" class="answerBtn" disabled>Easy</button>
@@ -71,8 +66,13 @@
 </div>
 
 <div id="teacherPanel">
+
+<h3>Teacher Dashboard</h3>
+
 <button onclick="showTeacher()">Teacher Mode</button>
+
 <div id="teacher"></div>
+
 </div>
 
 <script src="app.js"></script>
