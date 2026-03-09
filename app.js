@@ -152,6 +152,27 @@ document.getElementById("score").innerText =
 "Score: " + percent + "%"
 
 }
+function showTeacher(){
+
+let out=""
+
+for(let key in localStorage){
+
+if(key.startsWith("progress_")){
+
+let data = JSON.parse(localStorage.getItem(key))
+
+let total = Object.keys(data).length
+
+out += "<p>"+key+" : "+total+" kanji</p>"
+
+}
+
+}
+
+document.getElementById("teacher").innerHTML = out
+
+}
 // ----------------------
 // 進捗バー
 // ----------------------
