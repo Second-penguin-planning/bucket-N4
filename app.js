@@ -49,6 +49,9 @@ current=0
 
 loadCard()
 
+updateProgress()
+updateBuckets()
+
 }
 function updateProgress(){
 
