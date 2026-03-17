@@ -20,6 +20,11 @@
 <p>N5 + N4 | English / Tagalog</p>
 
 <input id="username" placeholder="Your name" onkeypress="if(event.key==='Enter') startUser()">
+  <p>Select Level:</p>
+<select id="level">
+  <option value="N4">JLPT N4</option>
+  <option value="N3">JLPT N3</option>
+</select>
 <button onclick="startUser()">Start</button>
 <button onclick="toggleHelp()">How to Use</button>
 
@@ -93,13 +98,7 @@ a scientifically proven method to remember vocabulary longer.
 <button onclick="answer(4)" class="answerBtn" disabled>Don't Know</button>
 
 </div>
-<p>Select Level:</p>
-<select id="level">
-  <option value="N4">JLPT N4</option>
-  <option value="N3">JLPT N3</option>
-</select>
-  <button onclick="selectLevel('N4')">N4</button>
-<button onclick="selectLevel('N3')">N3</button>
+
 <div id="stats">
 
 <h3>Bucket 4 (Don't Know)</h3>
