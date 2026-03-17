@@ -2,25 +2,7 @@ let reviewList = [];
 let kanjiList = [];
 let current = 0;
 let username = "";
-
-function loadData() {
-    fetch(`bucket-${selectedLevel}.json`)
-        .then(res => res.json())
-        .then(data => {
-            kanjiList = data;
-            console.log("Loaded:", selectedLevel);
-
-            // データ読み込み後にスタート処理
-            buildReviewList();
-            enableButtons();
-            loadCard();
-            updateProgress();
-            updateBuckets();
-            updateScore();
-        })
-        .catch(err => console.error("JSON load error:", err));
-}
-
+let selectedLevel = "N4";
 
 
 // --------------------
@@ -32,10 +14,31 @@ function getToday() {
 
 
 // --------------------
-// LocalStorageキー
+// LocalStorageキー（レベルごとに分離）
 // --------------------
 function getStorageKey() {
-    return "progress_" + username;
+    return "progress_" + username + "_" + selectedLevel;
+}
+
+
+// --------------------
+// データ読み込み（レベル対応）
+// --------------------
+function loadData() {
+    fetch(`bucket-${selectedLevel}.json`)
+        .then(res => res.json())
+        .then(data => {
+            kanjiList = data;
+            console.log("Loaded:", selectedLevel);
+
+            buildReviewList();
+            enableButtons();
+            loadCard();
+            updateProgress();
+            updateBuckets();
+            updateScore();
+        })
+        .catch(err => console.error("JSON load error:", err));
 }
 
 
@@ -51,13 +54,14 @@ function buildReviewList() {
 
     for (let i = 0; i < kanjiList.length; i++) {
         let k = kanjiList[i];
-        // 未学習、または復習予定日が今日以前のものをリストに入れる
+
         if (!data[k.kanji] || data[k.kanji].next <= todayDate) {
             reviewList.push(k);
         }
     }
     current = 0;
 }
+
 
 // --------------------
 // Start
@@ -70,42 +74,30 @@ function startUser() {
         return;
     }
 
-    // レベル取得
     selectedLevel = document.getElementById("level").value;
 
-    // ←ここ重要
     loadData();
-}
-    // スタート時にリストを構築して表示
-    buildReviewList();
-    enableButtons();
-    loadCard();
-    updateProgress();
-    updateBuckets();
-    updateScore();
 }
 
 
 // --------------------
 // ボタン有効化
 // --------------------
-function enableButtons(){
+function enableButtons() {
+    document.getElementById("showBtn").disabled = false;
 
-document.getElementById("showBtn").disabled = false
-
-document.querySelectorAll(".answerBtn").forEach(btn=>{
-btn.disabled = false
-})
-
+    document.querySelectorAll(".answerBtn").forEach(btn => {
+        btn.disabled = false;
+    });
 }
 
 
 // --------------------
 // カード表示
 // --------------------
-function loadCard(){
+function loadCard() {
 
-const kanjiEl = document.getElementById("kanji");
+    const kanjiEl = document.getElementById("kanji");
     const readingEl = document.getElementById("reading");
     const meaningEl = document.getElementById("meaning");
 
@@ -117,6 +109,7 @@ const kanjiEl = document.getElementById("kanji");
     }
 
     let k = reviewList[current];
+
     kanjiEl.innerText = k.kanji;
     readingEl.innerText = "Reading: " + k.reading;
     meaningEl.innerText = "Meaning: " + k.meaning;
@@ -125,14 +118,13 @@ const kanjiEl = document.getElementById("kanji");
     meaningEl.classList.add("hidden");
 }
 
+
 // --------------------
 // 答え表示
 // --------------------
-function showAnswer(){
-
-document.getElementById("reading").classList.remove("hidden")
-document.getElementById("meaning").classList.remove("hidden")
-
+function showAnswer() {
+    document.getElementById("reading").classList.remove("hidden");
+    document.getElementById("meaning").classList.remove("hidden");
 }
 
 
@@ -140,10 +132,10 @@ document.getElementById("meaning").classList.remove("hidden")
 // 復習日数
 // --------------------
 function getReviewDays(bucket) {
-    if (bucket == 1) return 7; // Easy
-    if (bucket == 2) return 3; // OK
-    if (bucket == 3) return 1; // Hard
-    if (bucket == 4) return 0; // Don't Know
+    if (bucket == 1) return 7;
+    if (bucket == 2) return 3;
+    if (bucket == 3) return 1;
+    if (bucket == 4) return 0;
 }
 
 
@@ -170,9 +162,8 @@ function answer(bucket) {
 
     current++;
 
-if (current >= reviewList.length) {
+    if (current >= reviewList.length) {
         alert("Finished today's study!");
-        // 終わった直後にリストを再更新（必要に応じて）
     }
 
     loadCard();
@@ -185,175 +176,149 @@ if (current >= reviewList.length) {
 // --------------------
 // 進捗バー
 // --------------------
-function updateProgress(){
+function updateProgress() {
 
-if(reviewList.length === 0){
+    if (reviewList.length === 0) {
+        document.getElementById("progressBar").style.width = "0%";
+        document.getElementById("progressText").innerText = "0 / 0";
+        return;
+    }
 
-document.getElementById("progressBar").style.width = "0%"
-document.getElementById("progressText").innerText = "0 / 0"
+    let percent = (current / reviewList.length) * 100;
 
-return
-
-}
-
-let percent = (current / reviewList.length) * 100
-
-document.getElementById("progressBar").style.width = percent + "%"
-
-document.getElementById("progressText").innerText =
-current + " / " + reviewList.length
-
+    document.getElementById("progressBar").style.width = percent + "%";
+    document.getElementById("progressText").innerText =
+        current + " / " + reviewList.length;
 }
 
 
 // --------------------
 // バケツ表示
 // --------------------
-function updateBuckets(){
+function updateBuckets() {
 
-let key = getStorageKey()
+    let key = getStorageKey();
+    let data = JSON.parse(localStorage.getItem(key)) || {};
 
-let data = JSON.parse(localStorage.getItem(key)) || {}
+    let b1 = [];
+    let b2 = [];
+    let b3 = [];
+    let b4 = [];
 
-let b1 = []
-let b2 = []
-let b3 = []
-let b4 = []
+    for (let k in data) {
+        let bucket = data[k].bucket;
 
-for(let k in data){
+        if (bucket == 1) b1.push(k);
+        if (bucket == 2) b2.push(k);
+        if (bucket == 3) b3.push(k);
+        if (bucket == 4) b4.push(k);
+    }
 
-let bucket = data[k].bucket
-
-if(bucket == 1) b1.push(k)
-if(bucket == 2) b2.push(k)
-if(bucket == 3) b3.push(k)
-if(bucket == 4) b4.push(k)
-
-}
-
-document.getElementById("bucket1").innerText = b1.join(" ")
-document.getElementById("bucket2").innerText = b2.join(" ")
-document.getElementById("bucket3").innerText = b3.join(" ")
-document.getElementById("bucket4").innerText = b4.join(" ")
-
+    document.getElementById("bucket1").innerText = b1.join(" ");
+    document.getElementById("bucket2").innerText = b2.join(" ");
+    document.getElementById("bucket3").innerText = b3.join(" ");
+    document.getElementById("bucket4").innerText = b4.join(" ");
 }
 
 
 // --------------------
 // 正解率
 // --------------------
-function updateScore(){
+function updateScore() {
 
-let key = getStorageKey()
+    let key = getStorageKey();
+    let data = JSON.parse(localStorage.getItem(key)) || {};
 
-let data = JSON.parse(localStorage.getItem(key)) || {}
+    let total = 0;
+    let correct = 0;
 
-let total = 0
-let correct = 0
+    for (let k in data) {
+        total++;
+        if (data[k].bucket == 1 || data[k].bucket == 2) {
+            correct++;
+        }
+    }
 
-for(let k in data){
+    if (total == 0) {
+        document.getElementById("score").innerText = "";
+        return;
+    }
 
-total++
+    let percent = Math.round((correct / total) * 100);
 
-if(data[k].bucket == 1 || data[k].bucket == 2){
-
-correct++
-
-}
-
-}
-
-if(total == 0){
-
-document.getElementById("score").innerText=""
-return
-
-}
-
-let percent = Math.round((correct / total) * 100)
-
-document.getElementById("score").innerText =
-"Score: " + percent + "%"
-
+    document.getElementById("score").innerText =
+        "Score: " + percent + "%";
 }
 
 
 // --------------------
 // Teacher Mode
 // --------------------
-function showTeacher(){
+function showTeacher() {
 
-let out = ""
+    let out = "";
 
-for(let i = 0; i < localStorage.length; i++){
+    for (let i = 0; i < localStorage.length; i++) {
 
-let key = localStorage.key(i)
+        let key = localStorage.key(i);
 
-if(key.startsWith("progress_")){
+        if (key.startsWith("progress_")) {
 
-let data = JSON.parse(localStorage.getItem(key))
+            let data = JSON.parse(localStorage.getItem(key));
+            let total = Object.keys(data).length;
 
-let total = Object.keys(data).length
+            out += "<p>" + key + " : " + total + " kanji</p>";
+        }
+    }
 
-out += "<p>" + key + " : " + total + " kanji</p>"
-
-}
-
-}
-
-document.getElementById("teacher").innerHTML = out
-
+    document.getElementById("teacher").innerHTML = out;
 }
 
 
 // --------------------
 // Swipe UI
 // --------------------
-window.onload = function(){
+window.onload = function () {
 
-let startX=0
-let startY=0
+    let startX = 0;
+    let startY = 0;
 
-let card=document.getElementById("card")
+    let card = document.getElementById("card");
 
-card.addEventListener("touchstart",e=>{
+    card.addEventListener("touchstart", e => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+    });
 
-startX=e.touches[0].clientX
-startY=e.touches[0].clientY
+    card.addEventListener("touchend", e => {
 
-})
+        let endX = e.changedTouches[0].clientX;
+        let endY = e.changedTouches[0].clientY;
 
-card.addEventListener("touchend",e=>{
+        let dx = endX - startX;
+        let dy = endY - startY;
 
-let endX=e.changedTouches[0].clientX
-let endY=e.changedTouches[0].clientY
-
-let dx=endX-startX
-let dy=endY-startY
-
-if(Math.abs(dx)>Math.abs(dy)){
-
-if(dx>50) answer(1)
-if(dx<-50) answer(3)
-
-}else{
-
-if(dy<-50) answer(2)
-if(dy>50) answer(4)
-
+        if (Math.abs(dx) > Math.abs(dy)) {
+            if (dx > 50) answer(1);
+            if (dx < -50) answer(3);
+        } else {
+            if (dy < -50) answer(2);
+            if (dy > 50) answer(4);
+        }
+    });
 }
 
-})
 
-}
-function toggleHelp(){
+// --------------------
+// ヘルプ表示
+// --------------------
+function toggleHelp() {
 
-let box = document.getElementById("helpBox")
+    let box = document.getElementById("helpBox");
 
-if(box.classList.contains("hidden")){
-box.classList.remove("hidden")
-}else{
-box.classList.add("hidden")
-}
-
+    if (box.classList.contains("hidden")) {
+        box.classList.remove("hidden");
+    } else {
+        box.classList.add("hidden");
+    }
 }
