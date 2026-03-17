@@ -3,15 +3,24 @@ let kanjiList = [];
 let current = 0;
 let username = "";
 
+function loadData() {
+    fetch(`bucket-${selectedLevel}.json`)
+        .then(res => res.json())
+        .then(data => {
+            kanjiList = data;
+            console.log("Loaded:", selectedLevel);
 
-// 1. データ読み込み（読み込むだけで表示はしない）
-fetch("bucket-N4.json")
-    .then(res => res.json())
-    .then(data => {
-        kanjiList = data;
-        console.log("Data loaded");
-    })
-    .catch(err => console.error("JSON load error:", err));
+            // データ読み込み後にスタート処理
+            buildReviewList();
+            enableButtons();
+            loadCard();
+            updateProgress();
+            updateBuckets();
+            updateScore();
+        })
+        .catch(err => console.error("JSON load error:", err));
+}
+
 
 
 // --------------------
@@ -55,11 +64,18 @@ function buildReviewList() {
 // --------------------
 function startUser() {
     username = document.getElementById("username").value;
+
     if (username === "") {
         alert("Please enter your name");
         return;
     }
 
+    // レベル取得
+    selectedLevel = document.getElementById("level").value;
+
+    // ←ここ重要
+    loadData();
+}
     // スタート時にリストを構築して表示
     buildReviewList();
     enableButtons();
